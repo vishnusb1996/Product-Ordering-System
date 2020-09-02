@@ -4,6 +4,10 @@ from db_config import mysql
 from flask import jsonify
 from flask import flash, request
 import dbconstants
+from CustomersController import customersAPI
+
+# Register controllers
+app.register_blueprint(customersAPI, url_prefix='/api/Customers')
 
 # @app.route('/createcategory', methods=['POST'])
 # def add_category():
@@ -157,24 +161,6 @@ def products():
 # 	finally:
 # 		cursor.close() 
 # 		conn.close()
-
-
-# @app.route('/GetAllCustomers')
-# def getAllCustomers():
-# 	try:
-# 		conn = mysql.connect()
-# 		cursor = conn.cursor(pymysql.cursors.DictCursor)
-# 		cursor.execute('SELECT * FROM customers')
-# 		rows = cursor.fetchall()
-# 		resp = jsonify(rows)
-# 		resp.status_code = 200
-# 		return resp
-# 	except Exception as e:
-# 		print(e)
-# 	finally:
-# 		cursor.close() 
-# 		conn.close()
-
 
 @app.errorhandler(404)
 def not_found(error=None):
