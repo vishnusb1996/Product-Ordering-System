@@ -4,12 +4,25 @@ from db_config import mysql
 from flask import jsonify
 from flask import flash, request
 import dbconstants
-from CustomersController import customersAPI
-from CategoryController import categoryAPI
+from flask import Blueprint
 
-# Register controllers
-app.register_blueprint(customersAPI, url_prefix='/api/Customers')
-app.register_blueprint(categoryAPI, url_prefix='/api/Category')
+categoryAPI = Blueprint('categoryAPI', __name__)
+
+@categoryAPI.route('/categories')
+def categories():
+	try:
+		conn = mysql.connect()
+		cursor = conn.cursor(pymysql.cursors.DictCursor)
+		cursor.execute(dbconstants.SELECT_ALL_CATEGORIES_SQL)
+		rows = cursor.fetchall()
+		resp = jsonify(rows)
+		resp.status_code = 200
+		return resp
+	except Exception as e:
+		print(e)
+	finally:
+		cursor.close() 
+		conn.close()
 
 # @app.route('/createcategory', methods=['POST'])
 # def add_category():
@@ -32,38 +45,6 @@ app.register_blueprint(categoryAPI, url_prefix='/api/Category')
 # 			return resp
 # 		else:
 # 			return not_found()
-# 	except Exception as e:
-# 		print(e)
-# 	finally:
-# 		cursor.close() 
-# 		conn.close()
-
-@app.route('/products')
-def products():
-	try:
-		conn = mysql.connect()
-		cursor = conn.cursor(pymysql.cursors.DictCursor)
-		cursor.execute(dbconstants.SELECT_ALL_CATEGORIES_SQL)
-		rows = cursor.fetchall()
-		resp = jsonify(rows)
-		resp.status_code = 200
-		return resp
-	except Exception as e:
-		print(e)
-	finally:
-		cursor.close() 
-		conn.close()
-
-# @app.route('/categories')
-# def categories():
-# 	try:
-# 		conn = mysql.connect()
-# 		cursor = conn.cursor(pymysql.cursors.DictCursor)
-# 		cursor.execute(dbconstants.SELECT_ALL_CATEGORIES_SQL)
-# 		rows = cursor.fetchall()
-# 		resp = jsonify(rows)
-# 		resp.status_code = 200
-# 		return resp
 # 	except Exception as e:
 # 		print(e)
 # 	finally:
