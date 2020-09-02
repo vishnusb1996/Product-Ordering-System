@@ -156,5 +156,5 @@ def not_found(error=None):
 
     return resp
 		
-if __name__ == "__main__":
-    categoryAPI.run(debug=True)
+# if __name__ == "__main__":
+#     app.run(debug=True)

@@ -6,10 +6,16 @@ from flask import flash, request
 import dbconstants
 from CustomersController import customersAPI
 from CategoryController import categoryAPI
+from ProductsController import productAPI
+from OrderController import orderAPI
+from OrderDetailsController import orderDetailsAPI
 
 # Register controllers
 app.register_blueprint(customersAPI, url_prefix='/api/Customers')
 app.register_blueprint(categoryAPI, url_prefix='/api/Category')
+app.register_blueprint(productAPI, url_prefix='/api/Products')
+app.register_blueprint(orderAPI, url_prefix='/api/Order')
+app.register_blueprint(orderDetailsAPI, url_prefix='/api/OrderDetails')
 
 # @app.route('/createcategory', methods=['POST'])
 # def add_category():
@@ -38,21 +44,21 @@ app.register_blueprint(categoryAPI, url_prefix='/api/Category')
 # 		cursor.close() 
 # 		conn.close()
 
-@app.route('/products')
-def products():
-	try:
-		conn = mysql.connect()
-		cursor = conn.cursor(pymysql.cursors.DictCursor)
-		cursor.execute(dbconstants.SELECT_ALL_CATEGORIES_SQL)
-		rows = cursor.fetchall()
-		resp = jsonify(rows)
-		resp.status_code = 200
-		return resp
-	except Exception as e:
-		print(e)
-	finally:
-		cursor.close() 
-		conn.close()
+# @app.route('/products')
+# def products():
+# 	try:
+# 		conn = mysql.connect()
+# 		cursor = conn.cursor(pymysql.cursors.DictCursor)
+# 		cursor.execute(dbconstants.SELECT_ALL_CATEGORIES_SQL)
+# 		rows = cursor.fetchall()
+# 		resp = jsonify(rows)
+# 		resp.status_code = 200
+# 		return resp
+# 	except Exception as e:
+# 		print(e)
+# 	finally:
+# 		cursor.close() 
+# 		conn.close()
 
 # @app.route('/categories')
 # def categories():
