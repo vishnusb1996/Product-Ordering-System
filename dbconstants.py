@@ -1,5 +1,4 @@
 SELECT_ALL_CATEGORIES_SQL = 'SELECT categoryid, categoryname, description FROM categories'
-GetAllCustomers_SQL = 'SELECT * FROM Customers'
 
 SELECT_ALL_PRODUCTS_SQL = 'SELECT p.ProductID, p.ProductName, p.CategoryID,p.UnitPrice, c.CategoryName, c.Description FROM product p INNER JOIN categories c ON p.CategoryID = c.CategoryID'
 SELECT_PRODUCT_SQL = 'SELECT p.ProductID, p.ProductName, p.CategoryID,p.UnitPrice, c.CategoryName, c.Description FROM product p INNER JOIN categories c ON p.CategoryID = c.CategoryID WHERE p.ProductID=%s'
@@ -12,3 +11,10 @@ SELECT_ORDER_SQL = "SELECT o.OrderID,o.CustomerID,o.OrderDate,o.RequiredDate,o.S
 DELETE_ORDER_SQL = "DELETE FROM `order` WHERE OrderID = %s"
 INSERT_ORDER_SQL = "INSERT INTO `order` ( CustomerID,OrderDate,RequiredDate,ShippedDate,ShipName,ShipAddress,ShipCity,ShipRegion,ShipPostalCode,ShipCountry ) VALUES (%S,%S,%S,%S,%S,%S,%S,%S,%S,%S)"
 UPDATE_ORDER_SQL = "UPDATE `order` SET CustomerID = %s,OrderDate = %s,RequiredDate=%s,ShippedDate = %s,ShipName = %s,ShipAddress = %s, ShipCity =%s, ShipRegion= %s , ShipPostalCode =%s, ShipCountry = %s WHERE OrderID = %s"
+
+# Customers SQL Queries
+GetAllCustomers_SQL = 'SELECT CustomerID, CompanyName, ContactName, ContactTitle, Address, City, Region, PostalCode, Country, Phone FROM Customers'
+GetCustomerDataById_SQL = 'SELECT CustomerID, CompanyName, ContactName, ContactTitle, Address, City, Region, PostalCode, Country, Phone FROM Customers WHERE CustomerID = %S'
+InsertNewCustomer_SQL = 'INSERT INTO customers (CompanyName, ContactName, ContactTitle, Address, City, Region, PostalCode, Country, Phone) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
+UpdateCustomer_SQL = 'UPDATE customers SET CompanyName = %s, ContactName = %s, ContactTitle = %s, Address = %s, City = %s, Region = %s, PostalCode = %s, Country = %s, Phone = %s WHERE CustomerID = %s'
+DeleteCustomer_SQL = 'DELETE FROM customers WHERE CustomerID = %s'
