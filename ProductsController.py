@@ -98,8 +98,8 @@ def update_product():
 		cursor.close() 
 		conn.close()
 
-@productAPI.route('/DeleteCategory/<int:id>')
-def delete_category(id):
+@productAPI.route('/DeleteProduct/<int:id>')
+def delete_Product(id):
 	try:
 		conn = mysql.connect()
 		cursor = conn.cursor()
