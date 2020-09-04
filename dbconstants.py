@@ -14,7 +14,7 @@ UPDATE_ORDER_SQL = "UPDATE `order` SET CustomerID = %s,OrderDate = %s,RequiredDa
 
 # Customers SQL Queries
 GetAllCustomers_SQL = 'SELECT CustomerID, CompanyName, ContactName, ContactTitle, Address, City, Region, PostalCode, Country, Phone FROM Customers'
-GetCustomerDataById_SQL = 'SELECT CustomerID, CompanyName, ContactName, ContactTitle, Address, City, Region, PostalCode, Country, Phone FROM Customers WHERE CustomerID = %S'
+GetCustomerDataById_SQL = 'SELECT CustomerID, CompanyName, ContactName, ContactTitle, Address, City, Region, PostalCode, Country, Phone FROM Customers WHERE CustomerID = %s'
 InsertNewCustomer_SQL = 'INSERT INTO customers (CompanyName, ContactName, ContactTitle, Address, City, Region, PostalCode, Country, Phone) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
 UpdateCustomer_SQL = 'UPDATE customers SET CompanyName = %s, ContactName = %s, ContactTitle = %s, Address = %s, City = %s, Region = %s, PostalCode = %s, Country = %s, Phone = %s WHERE CustomerID = %s'
 DeleteCustomer_SQL = 'DELETE FROM customers WHERE CustomerID = %s'

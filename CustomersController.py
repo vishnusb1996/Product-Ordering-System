@@ -6,9 +6,9 @@ import dbconstants
 from flask import Blueprint
 
 customersAPI = Blueprint('customersAPI', __name__)
+generalExceptionMessage = 'Oops..Something went wrong..Please try again later'
 
 # Used to get all customers details
-
 
 @customersAPI.route("/GetAllCustomers")
 def getAllCustomers():
@@ -20,12 +20,16 @@ def getAllCustomers():
         resp = jsonify(rows)
         resp.status_code = 200
         return resp
-    except Exception as e:
-        print(e)
+    # except Exception as e:
+    except Exception:
+        resp = jsonify(generalExceptionMessage)
+        resp.status_code = 500
+        return resp
     finally:
         cursor.close()
         conn.close()
 
+# Used to get a customer details by customer id
 
 @customersAPI.route('/GetCustomerDataById/<int:id>')
 def getCustomerDataById(id):
@@ -37,12 +41,16 @@ def getCustomerDataById(id):
         resp = jsonify(row)
         resp.status_code = 200
         return resp
-    except Exception as e:
-        print(e)
+    # except Exception as e:
+    except Exception:
+        resp = jsonify(generalExceptionMessage)
+        resp.status_code = 500
+        return resp
     finally:
         cursor.close()
         conn.close()
 
+# Used to save new customer
 
 @customersAPI.route('/InsertNewCustomer', methods=['POST'])
 def insertNewCustomer():
@@ -71,12 +79,16 @@ def insertNewCustomer():
             return resp
         else:
             return not_found()
-    except Exception as e:
-        print(e)
+    # except Exception as e:
+    except Exception:
+        resp = jsonify(generalExceptionMessage)
+        resp.status_code = 500
+        return resp
     finally:
         cursor.close()
         conn.close()
 
+# Used to edit existing customer
 
 @customersAPI.route('/UpdateCustomer', methods=['POST'])
 def updateCustomer():
@@ -106,12 +118,16 @@ def updateCustomer():
             return resp
         else:
             return not_found()
-    except Exception as e:
-        print(e)
+    # except Exception as e:
+    except Exception:
+        resp = jsonify(generalExceptionMessage)
+        resp.status_code = 500
+        return resp
     finally:
         cursor.close()
         conn.close()
 
+# Used to delete existing customer
 
 @customersAPI.route('/DeleteCustomer/<int:id>')
 def deleteCustomer(id):
@@ -124,7 +140,14 @@ def deleteCustomer(id):
         resp.status_code = 200
         return resp
     except Exception as e:
-        print(e)
+        if 'a foreign key constraint fails' in str(e):
+            resp = jsonify('Cannot delete..This customer is mapped somewhere')
+            resp.status_code = 500
+            return resp        
+        else:
+            resp = jsonify(generalExceptionMessage)
+            resp.status_code = 500
+            return resp  
     finally:
         cursor.close()
         conn.close()
