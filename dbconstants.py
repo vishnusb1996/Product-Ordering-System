@@ -9,7 +9,7 @@ UPDATE_PRODUCT_SQL = "UPDATE product SET ProductName = %s,CategoryID = %s,UnitPr
 SELECT_ALL_ORDER_SQL = "SELECT o.OrderID,o.CustomerID,o.OrderDate,o.RequiredDate,o.ShippedDate,o.ShipName,o.ShipAddress,o.ShipCity,o.ShipRegion,o.ShipPostalCode,o.ShipCountry, c.CompanyName,c.ContactName,c.ContactTitle FROM `order` o inner join customers c on c.CustomerID = o.CustomerID"
 SELECT_ORDER_SQL = "SELECT o.OrderID,o.CustomerID,o.OrderDate,o.RequiredDate,o.ShippedDate,o.ShipName,o.ShipAddress,o.ShipCity,o.ShipRegion,o.ShipPostalCode,o.ShipCountry, c.CompanyName,c.ContactName,c.ContactTitle FROM `order` o inner join customers c on c.CustomerID = o.CustomerID  WHERE o.OrderID=%s"
 DELETE_ORDER_SQL = "DELETE FROM `order` WHERE OrderID = %s"
-INSERT_ORDER_SQL = "INSERT INTO `order` ( CustomerID,OrderDate,RequiredDate,ShippedDate,ShipName,ShipAddress,ShipCity,ShipRegion,ShipPostalCode,ShipCountry ) VALUES (%S,%S,%S,%S,%S,%S,%S,%S,%S,%S)"
+INSERT_ORDER_SQL = "INSERT INTO `order` ( CustomerID,OrderDate,RequiredDate,ShippedDate,ShipName,ShipAddress,ShipCity,ShipRegion,ShipPostalCode,ShipCountry ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 UPDATE_ORDER_SQL = "UPDATE `order` SET CustomerID = %s,OrderDate = %s,RequiredDate=%s,ShippedDate = %s,ShipName = %s,ShipAddress = %s, ShipCity =%s, ShipRegion= %s , ShipPostalCode =%s, ShipCountry = %s WHERE OrderID = %s"
 
 # Customers SQL Queries

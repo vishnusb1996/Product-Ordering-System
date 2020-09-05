@@ -28,6 +28,7 @@ def orders():
 @orderAPI.route('/creatorder', methods=['POST'])
 def add_order():
 	try:
+		
 		_json = request.json
 		CustomerID = _json['CustomerID']
 		OrderDate = _json['OrderDate']
@@ -57,6 +58,7 @@ def add_order():
 		else:
 			return not_found()
 	except Exception as e:
+		
 		print(e)
 	finally:
 		cursor.close() 
@@ -81,6 +83,7 @@ def order(id):
 @orderAPI.route('/updateorder', methods=['POST'])
 def update_order():
 	try:
+
 		_json = request.json
 		OrderID = _json['OrderID']
 		CustomerID = _json['CustomerID']
@@ -110,6 +113,7 @@ def update_order():
 		else:
 			return not_found()
 	except Exception as e:
+
 		print(e)
 	finally:
 		cursor.close() 
