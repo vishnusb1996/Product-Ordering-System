@@ -7,6 +7,7 @@ import dbconstants
 from flask import Blueprint
 
 productAPI = Blueprint('productAPI', __name__)
+generalExceptionMessage = 'Oops..Something went wrong..Please try again later'
 
 @productAPI.route('/products')
 def products():
@@ -21,8 +22,9 @@ def products():
 	except Exception as e:
 		print(e)
 	finally:
-		cursor.close() 
+		cursor.close()
 		conn.close()
+
 
 @productAPI.route('/createproduct', methods=['POST'])
 def add_product():
@@ -33,10 +35,10 @@ def add_product():
 		_UnitPrice = _json['unitPrice']
 		# validate the received values
 		if _product_name and _category_id and _UnitPrice and request.method == 'POST':
-		
+
 			# save edits
 			sql = dbconstants.INSERT_PRODUCT_SQL
-			data = (_product_name, _category_id,_UnitPrice)
+			data = (_product_name, _category_id, _UnitPrice)
 			conn = mysql.connect()
 			cursor = conn.cursor()
 			cursor.execute(sql, data)
@@ -49,8 +51,9 @@ def add_product():
 	except Exception as e:
 		print(e)
 	finally:
-		cursor.close() 
+		cursor.close()
 		conn.close()
+
 
 @productAPI.route('/product/<int:id>')
 def product(id):
@@ -65,8 +68,9 @@ def product(id):
 	except Exception as e:
 		print(e)
 	finally:
-		cursor.close() 
+		cursor.close()
 		conn.close()
+
 
 @productAPI.route('/UpdateProduct', methods=['POST'])
 def update_product():
@@ -76,13 +80,13 @@ def update_product():
 		_product_name = _json['productName']
 		_category_id = _json['categoryId']
 		_UnitPrice = _json['unitPrice']
-		
+
 		# validate the received values
 		if _product_id and _product_name and _category_id and _UnitPrice and request.method == 'POST':
-			
+
 			# save edits
 			sql = dbconstants.UPDATE_PRODUCT_SQL
-			data = (_product_name, _category_id,_UnitPrice, _product_id)
+			data = (_product_name, _category_id, _UnitPrice, _product_id)
 			conn = mysql.connect()
 			cursor = conn.cursor()
 			cursor.execute(sql, data)
@@ -95,24 +99,32 @@ def update_product():
 	except Exception as e:
 		print(e)
 	finally:
-		cursor.close() 
+		cursor.close()
 		conn.close()
+
 
 @productAPI.route('/DeleteProduct/<int:id>')
 def delete_Product(id):
-	try:
-		conn = mysql.connect()
-		cursor = conn.cursor()
-		cursor.execute(dbconstants.DELETE_PRODUCT_SQL, (id,))
-		conn.commit()
-		resp = jsonify('Product Deleted successfully!')
-		resp.status_code = 200
-		return resp
-	except Exception as e:
-		print(e)
-	finally:
-		cursor.close() 
-		conn.close()
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute(dbconstants.DELETE_PRODUCT_SQL, (id,))
+        conn.commit()
+        resp = jsonify('Product Deleted successfully!')
+        resp.status_code = 200
+        return resp
+    except Exception as e:
+        if 'a foreign key constraint fails' in str(e):
+	        resp = jsonify('Cannot delete..This product is mapped somewhere')
+	        resp.status_code = 500
+	        return resp
+        else:
+            resp = jsonify(generalExceptionMessage)
+            resp.status_code = 500
+            return resp
+    finally:
+        cursor.close() 
+        conn.close()
 
 @productAPI.errorhandler(404)
 def not_found(error=None):

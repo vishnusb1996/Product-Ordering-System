@@ -7,6 +7,7 @@ import dbconstants
 from flask import Blueprint
 
 orderAPI = Blueprint('orderAPI', __name__)
+generalExceptionMessage = 'Oops..Something went wrong..Please try again later'
 
 @orderAPI.route('/orders')
 def orders():
@@ -116,19 +117,26 @@ def update_order():
 
 @orderAPI.route('/deleteorder/<int:id>')
 def delete_order(id):
-	try:
-		conn = mysql.connect()
-		cursor = conn.cursor()
-		cursor.execute(dbconstants.DELETE_ORDER_SQL, (id,))
-		conn.commit()
-		resp = jsonify('Order Deleted successfully!')
-		resp.status_code = 200
-		return resp
-	except Exception as e:
-		print(e)
-	finally:
-		cursor.close() 
-		conn.close()
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute(dbconstants.DELETE_ORDER_SQL, (id,))
+        conn.commit()
+        resp = jsonify('Order Deleted successfully!')
+        resp.status_code = 200
+        return resp
+    except Exception as e:
+        if 'a foreign key constraint fails' in str(e):
+            resp = jsonify('Cannot delete..This category is mapped somewhere')
+            resp.status_code = 500
+            return resp
+        else:
+            resp = jsonify(generalExceptionMessage)
+            resp.status_code = 500
+            return resp
+    finally:
+        cursor.close() 
+        conn.close()
 
 @orderAPI.errorhandler(404)
 def not_found(error=None):

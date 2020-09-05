@@ -10,6 +10,7 @@ generalExceptionMessage = 'Oops..Something went wrong..Please try again later'
 
 # Used to get all customers details
 
+
 @customersAPI.route("/GetAllCustomers")
 def getAllCustomers():
     try:
@@ -30,6 +31,7 @@ def getAllCustomers():
         conn.close()
 
 # Used to get a customer details by customer id
+
 
 @customersAPI.route('/GetCustomerDataById/<int:id>')
 def getCustomerDataById(id):
@@ -52,6 +54,7 @@ def getCustomerDataById(id):
 
 # Used to save new customer
 
+
 @customersAPI.route('/InsertNewCustomer', methods=['POST'])
 def insertNewCustomer():
     try:
@@ -69,7 +72,8 @@ def insertNewCustomer():
         if _company_name and _contact_name and _contact_title and _address and _city and _region and _postal_code and _country and _phone and request.method == 'POST':
 
             sql = dbconstants.InsertNewCustomer_SQL
-            data = (_company_name, _contact_name, _contact_title, _address, _city, _region, _postal_code, _country, _phone)
+            data = (_company_name, _contact_name, _contact_title,
+                    _address, _city, _region, _postal_code, _country, _phone)
             conn = mysql.connect()
             cursor = conn.cursor()
             cursor.execute(sql, data)
@@ -90,6 +94,7 @@ def insertNewCustomer():
 
 # Used to edit existing customer
 
+
 @customersAPI.route('/UpdateCustomer', methods=['POST'])
 def updateCustomer():
     try:
@@ -108,7 +113,8 @@ def updateCustomer():
         if _customer_id and _company_name and _contact_name and _contact_title and _address and _city and _region and _postal_code and _country and _phone and request.method == 'POST':
 
             sql = dbconstants.UpdateCustomer_SQL
-            data = (_company_name, _contact_name, _contact_title, _address, _city, _region, _postal_code, _country, _phone, _customer_id)
+            data = (_company_name, _contact_name, _contact_title, _address,
+                    _city, _region, _postal_code, _country, _phone, _customer_id)
             conn = mysql.connect()
             cursor = conn.cursor()
             cursor.execute(sql, data)
@@ -129,6 +135,7 @@ def updateCustomer():
 
 # Used to delete existing customer
 
+
 @customersAPI.route('/DeleteCustomer/<int:id>')
 def deleteCustomer(id):
     try:
@@ -143,11 +150,11 @@ def deleteCustomer(id):
         if 'a foreign key constraint fails' in str(e):
             resp = jsonify('Cannot delete..This customer is mapped somewhere')
             resp.status_code = 500
-            return resp        
+            return resp
         else:
             resp = jsonify(generalExceptionMessage)
             resp.status_code = 500
-            return resp  
+            return resp
     finally:
         cursor.close()
         conn.close()
