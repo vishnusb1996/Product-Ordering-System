@@ -4,13 +4,13 @@ from flask import jsonify
 from flask import flash, request
 import dbconstants
 from flask import Blueprint
+from collections import namedtuple
+import base64
 
 customersAPI = Blueprint('customersAPI', __name__)
 generalExceptionMessage = 'Oops..Something went wrong..Please try again later'
 
 # Used to get all customers details
-
-
 @customersAPI.route("/GetAllCustomers")
 def getAllCustomers():
     try:
@@ -18,9 +18,16 @@ def getAllCustomers():
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute(dbconstants.GetAllCustomers_SQL)
         rows = cursor.fetchall()
-        resp = jsonify(rows)
-        resp.status_code = 200
-        return resp
+        if rows and len(rows) > 0:
+            CustomerDTO = namedtuple("CustomerDTO", "customers message status")
+            cst = CustomerDTO(rows,"Success",200)
+            for i, f in enumerate(cst.customers):
+             cst.customers[i]['Password'] = base64.b64decode(f['Password'].encode('utf-8',errors = 'strict')).decode("utf-8")
+            return jsonify({'Result': cst})
+        else:
+            CustomerDTO = namedtuple("CustomerDTO", "customers message status")
+            cst = CustomerDTO([],"Error",500)
+            return jsonify({'Result': cst})
     # except Exception as e:
     except Exception:
         resp = jsonify(generalExceptionMessage)
@@ -31,8 +38,6 @@ def getAllCustomers():
         conn.close()
 
 # Used to get a customer details by customer id
-
-
 @customersAPI.route('/GetCustomerDataById/<int:id>')
 def getCustomerDataById(id):
     try:
@@ -53,8 +58,6 @@ def getCustomerDataById(id):
         conn.close()
 
 # Used to save new customer
-
-
 @customersAPI.route('/InsertNewCustomer', methods=['POST'])
 def insertNewCustomer():
     try:
@@ -68,12 +71,15 @@ def insertNewCustomer():
         _postal_code = _json['postalCode']
         _country = _json['country']
         _phone = _json['phone']
-
-        if _company_name and _contact_name and _contact_title and _address and _city and _region and _postal_code and _country and _phone and request.method == 'POST':
-
+        _customer_type = _json['customerType']
+        _password = _json['password']        
+       
+        if _company_name and _contact_name and _contact_title and _address and _city and _region and _postal_code and _country and _phone and _customer_type and _password and request.method == 'POST':
+            
             sql = dbconstants.InsertNewCustomer_SQL
+            encoded = base64.b64encode(_password.encode('utf-8',errors = 'strict')).decode("utf-8")            
             data = (_company_name, _contact_name, _contact_title,
-                    _address, _city, _region, _postal_code, _country, _phone)
+                    _address, _city, _region, _postal_code, _country, _phone, _customer_type, encoded)
             conn = mysql.connect()
             cursor = conn.cursor()
             cursor.execute(sql, data)
@@ -93,8 +99,6 @@ def insertNewCustomer():
         conn.close()
 
 # Used to edit existing customer
-
-
 @customersAPI.route('/UpdateCustomer', methods=['POST'])
 def updateCustomer():
     try:
@@ -134,8 +138,6 @@ def updateCustomer():
         conn.close()
 
 # Used to delete existing customer
-
-
 @customersAPI.route('/DeleteCustomer/<int:id>')
 def deleteCustomer(id):
     try:
@@ -170,3 +172,10 @@ def not_found(error=None):
     resp.status_code = 404
 
     return resp
+
+# DTO Classes
+class CustomerDTO:
+    def __init__(self, customers, message, status):
+        self.customers  = []
+        self.message = ""
+        self.status   = 0
