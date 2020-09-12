@@ -1,5 +1,6 @@
 from flask import Flask
 from logging.config import dictConfig
+from flask_cors import CORS
 
 dictConfig({
     'version': 1,
@@ -19,3 +20,4 @@ dictConfig({
 
 
 app = Flask(__name__)
+CORS(app)

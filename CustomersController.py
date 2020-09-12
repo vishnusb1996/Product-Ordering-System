@@ -30,9 +30,9 @@ def getAllCustomers():
             return jsonify({'Result': cst})
     # except Exception as e:
     except Exception:
-        resp = jsonify(generalExceptionMessage)
-        resp.status_code = 500
-        return resp
+        CustomerDTO = namedtuple("CustomerDTO", "customers message status")
+        cst = CustomerDTO([],generalExceptionMessage,500)
+        return jsonify({'Result': cst})
     finally:
         cursor.close()
         conn.close()
