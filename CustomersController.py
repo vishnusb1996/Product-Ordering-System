@@ -23,6 +23,7 @@ def getAllCustomers():
             cst = CustomerDTO(rows,"Success",200)
             for i, f in enumerate(cst.customers):
              cst.customers[i]['Password'] = base64.b64decode(f['Password'].encode('utf-8',errors = 'strict')).decode("utf-8")
+             cst.customers[i]['SrNo'] = i + 1
             return jsonify({'Result': cst})
         else:
             CustomerDTO = namedtuple("CustomerDTO", "customers message status")
